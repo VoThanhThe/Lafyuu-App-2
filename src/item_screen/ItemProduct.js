@@ -51,14 +51,14 @@ const styles = StyleSheet.create({
         marginTop: 4
     },
     container: {
-        width: "48%",
+        flex: 1,
         height: 282,
         backgroundColor: '#ffffff',
         padding: 16,
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#EBF0FF',
-        marginTop: 16
+        margin: 6
     },
     image: {
         width: "100%",

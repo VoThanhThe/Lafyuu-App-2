@@ -39,6 +39,7 @@ import ListCategory from '../screens/ListCategory';
 import SearchResult from '../screens/SearchResult';
 import ShipTo from '../screens/ShipTo';
 import Edit_Address from '../screens/Edit_Address';
+import SeeAllProduct from '../screens/SeeAllProduct';
 
 
 
@@ -70,6 +71,7 @@ const HomeStack = () => {
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="SearchResult" component={SearchResult} />
       <Stack.Screen name="ListCategory" component={ListCategory} />
+      <Stack.Screen name="SeeAllProduct" component={SeeAllProduct} />
     </Stack.Navigator>
   );
 };

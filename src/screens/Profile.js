@@ -14,66 +14,6 @@ const Profile = (props) => {
     const [imageProfile, setImageProfile] = useState('');
     const avatarProfileDefault = 'https://firebasestorage.googleapis.com/v0/b/app-shoes-6fd12.appspot.com/o/undraw_Male_avatar_g98d.png?alt=media&token=d645bc28-46c6-43bb-8cdb-749cb6019c41'
 
-    // const capture = async () => {
-    //     try {
-    //         const result = await launchCamera();
-    //         console.log(result.assets[0].uri);
-
-    //         // const formdata = new FormData();
-    //         // formdata.append('image', {
-    //         //   uri: result.assets[0].uri,
-    //         //   type: 'image/jpeg',
-    //         //   name: 'image/jpg',
-    //         // });
-
-    //         const formdata = new FormData();
-    //         formdata.append('image', {
-    //             uri: result.assets[0].uri,
-    //             type: 'image/jpeg',
-    //             name: 'image.jpg',
-    //         });
-
-    //         const response = await AxiosIntance("multipart/form-data").post('/media/upload', formdata);
-    //         console.log(response);
-    //         console.log(response.data.path);
-
-    //         if (response.error == false) {
-    //             setImageProfile(response.data.path);
-    //             ToastAndroid.show('Thành Công', ToastAndroid.SHORT);
-    //         } else {
-    //             ToastAndroid.show('Upload image failed', ToastAndroid.SHORT);
-    //         }
-    //     } catch (e) {
-    //         console.log("====> " + e);
-    //     }
-
-    // }
-
-    // const getImageLibrary = async () => {
-    //     const result = await launchImageLibrary();
-    //     console.log(result);
-    //     console.log(result.assets[0].uri);
-
-    //     const formdata = new FormData();
-    //     formdata.append('avatar', {
-    //         uri: result.assets[0].uri,
-    //         type: 'avatar/jpeg',
-    //         name: 'avatar.jpg',
-    //     });
-
-
-    //     const response = await AxiosIntance("multipart/form-data").post('api/user/upload', formdata);
-    //     console.log(response);
-    //     console.log(response.path);
-
-    //     if (response.error == false) {
-    //         setImageProfile(response.path);
-    //         ToastAndroid.show('Thành Công', ToastAndroid.SHORT);
-    //     } else {
-    //         ToastAndroid.show('Upload image failed', ToastAndroid.SHORT);
-    //     }
-    // }
-
     useEffect(() => {
         const getUser = async () => {
             try {

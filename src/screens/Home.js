@@ -24,44 +24,47 @@ const Home = (props) => {
   const [dataProduct, setDataProduct] = useState([]);
   const [dataCategory, setDataCategory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [productsResponse, categoriesResponse] = await Promise.all([
-          AxiosIntance().get("/api/product"),
-          AxiosIntance().get("/api/categories/get-all-categories"),
-        ]);
-  
-        console.log("Products Response:", productsResponse);
-        console.log("Categories Response:", categoriesResponse);
-  
-        if (productsResponse.returnData.error === false) {
-          setDataProduct(productsResponse.products);
-        } else {
-          console.log("Lấy dữ liệu sản phẩm thất bại");
-        }
-  
-        if (categoriesResponse.returnData.error === false) {
-          setDataCategory(categoriesResponse.categories);
-        } else {
-          console.log("Lấy dữ liệu danh mục thất bại");
-        }
-  
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+
+  // Giới hạn số phần tử hiển thị
+  const limit = 10;
+  const dataFlashSale = dataProduct.slice(0, limit);
+  const dataMegaSale = dataProduct.slice(10, limit + 10);
+
+  const fetchData = async () => {
+    try {
+      const [productsResponse, categoriesResponse] = await Promise.all([
+        AxiosIntance().get(`/api/product`),
+        AxiosIntance().get("/api/categories/get-all-categories"),
+      ]);
+
+      console.log("Products Response:", productsResponse);
+
+      if (productsResponse.returnData.error === false) {
+        setDataProduct(productsResponse.products);
+      } else {
+        console.log("Lấy dữ liệu sản phẩm thất bại");
       }
-    };
-  
+
+      if (categoriesResponse.returnData.error === false) {
+        setDataCategory(categoriesResponse.categories);
+      } else {
+        console.log("Lấy dữ liệu danh mục thất bại");
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+
     // Call the fetchData function to fetch data from both APIs
     fetchData();
-  
+
     return () => {
       // Cleanup logic if needed
     };
   }, []);
-  
+
 
   return (
     < >
@@ -184,12 +187,14 @@ const Home = (props) => {
                     alignItems: 'center',
                   }}>
                   <Text style={styles.title}>Flash Sale</Text>
-                  <Text style={[styles.title, { color: '#40BFFF' }]}>See More</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate("SeeAllProduct", { title: "Flash Sale" })}>
+                    <Text style={[styles.title, { color: '#40BFFF' }]}>See More</Text>
+                  </TouchableOpacity>
                 </View>
 
                 <FlatList
                   style={{ marginVertical: 12 }}
-                  data={dataProduct}
+                  data={dataFlashSale}
                   renderItem={({ item }) => <ItemFlashSale data={item} navigation={navigation} />}
                   keyExtractor={item => item._id}
                   horizontal={true}
@@ -205,12 +210,14 @@ const Home = (props) => {
                     alignItems: 'center',
                   }}>
                   <Text style={styles.title}>Mega Sale</Text>
-                  <Text style={[styles.title, { color: '#40BFFF' }]}>See More</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate("SeeAllProduct", {title: "Mega Sale"})}>
+                    <Text style={[styles.title, { color: '#40BFFF' }]}>See More</Text>
+                  </TouchableOpacity>
                 </View>
 
                 <FlatList
                   style={{ marginVertical: 12 }}
-                  data={dataProduct}
+                  data={dataMegaSale}
                   renderItem={({ item }) => <ItemFlashSale data={item} navigation={navigation} />}
                   keyExtractor={item => item._id}
                   horizontal={true}
@@ -224,9 +231,15 @@ const Home = (props) => {
                 />
                 {/* Bannel 2 */}
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                  {
-                    dataProduct.map((item) => <ItemProduct key={item._id} data={item} navigation={navigation} />)
-                  }
+                  <FlatList
+                    style={{ marginVertical: 12 }}
+                    numColumns={2}
+                    data={dataProduct}
+                    scrollEnabled={false}
+                    renderItem={({ item }) => <ItemProduct data={item} navigation={navigation} />}
+                    keyExtractor={item => item._id}
+                    showsHorizontalScrollIndicator={false}
+                  />
                 </View>
 
               </View>

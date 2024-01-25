@@ -12,10 +12,12 @@ import {
     updateCartItem
 } from '../redux2/actions/Actions'
 import LoadingScreen from '../screens/LoadingScreen'
+import { useNavigation } from '@react-navigation/native'
 
 const ItemCart = (props) => {
     const dispatch = useDispatch();
-    const { data, index } = props;
+    const { data } = props;
+    const navigation = useNavigation()
     const [quantity, setQuantity] = useState(1);
     const [price, setPrice] = useState(data.price);
     const [isModalVisible, setModalVisible] = useState(false);
@@ -129,12 +131,17 @@ const ItemCart = (props) => {
         }
     }
     return (
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container}
+            onPress={() => navigation.navigate('ProductDetail', { data })}>
             <View style={styles.group_card}>
                 <Image style={styles.image} source={{ uri: data.image }} />
                 <View style={styles.group_right}>
                     <View style={styles.group_right_up}>
-                        <Text style={styles.textName}>{data.name}</Text>
+                        <Text style={styles.textName}>
+                            {
+                                data?.name.length > 25 ? (data?.name).slice(0, 25) + "..." : data?.name
+                            }
+                        </Text>
                         <TouchableOpacity onPress={() => { onAddFavorite() }}>
                             {
                                 isProductInFavorite ? (<Ionicons name="heart" color="red" size={18} />) :
@@ -213,7 +220,7 @@ const ItemCart = (props) => {
                     </View>
                 </View>
             </Modal>
-        </View>
+        </TouchableOpacity>
     )
 }
 

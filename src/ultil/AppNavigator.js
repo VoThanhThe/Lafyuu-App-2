@@ -87,6 +87,7 @@ const ExploreStack = () => {
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="SearchResult" component={SearchResult} />
       <Stack.Screen name="ListCategory" component={ListCategory} />
+      <Stack.Screen name="ProductDetail" component={ProductDetail} />
     </Stack.Navigator>
   );
 };

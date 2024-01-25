@@ -4,12 +4,12 @@ import {
   View,
   Image,
   TextInput,
-  Pressable,
   TouchableOpacity,
   ToastAndroid,
   Alert,
+  Button,
 } from 'react-native';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon1 from 'react-native-vector-icons/Feather';
 import { AppContext } from '../ultil/AppContext';
@@ -18,6 +18,7 @@ import AxiosIntance from '../ultil/AxiosIntance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux2/actions/UserAction'
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const Login = (props) => {
   const { isLogin, setisLogin } = useContext(AppContext);
@@ -78,6 +79,46 @@ const Login = (props) => {
     }
 
   };
+
+  useEffect(() => {
+    // Khởi tạo thư viện Google Sign-In
+    GoogleSignin.configure({
+      webClientId: '536256392189-92ghr4nhfuh1u2horklnrsrnb60p390r.apps.googleusercontent.com', // Cung cấp Web Client ID từ Google Developer Console
+    });
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+
+      // userInfo.idToken chính là token xác thực bạn cần
+      const token = userInfo.idToken;
+      const user = userInfo.user;
+      console.log("Token:", token);
+      console.log("User:", user);
+      await AsyncStorage.setItem("token", token);
+      ToastAndroid.show('Login Successfully!', ToastAndroid.SHORT);
+      setisLogin(true);
+
+      // Lưu token và thực hiện các bước khác, chẳng hạn như đăng nhập vào hệ thống của bạn
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // Người dùng huỷ đăng nhập
+        console.log('Google Sign-In cancelled');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // Đang có quá trình đăng nhập khác đang diễn ra
+        console.log('Google Sign-In in progress');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // Google Play Services không khả dụng
+        console.log('Google Play Services not available');
+      } else {
+        // Lỗi khác
+        console.error('Google Sign-In error', error);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -118,7 +159,7 @@ const Login = (props) => {
         ]}>
         OR
       </Text>
-      <TouchableOpacity style={styles.buttonSocial}>
+      <TouchableOpacity style={styles.buttonSocial} onPress={handleGoogleLogin}>
         <Text style={styles.textButtonSocial}>Login with Google</Text>
         <Image
           style={styles.imageGG}

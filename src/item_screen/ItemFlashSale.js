@@ -15,7 +15,11 @@ const ItemFlashSale = (props) => {
     <TouchableOpacity style = {styles.container}
     onPress={() => navigation.push('ProductDetail', {data})}> 
       <Image style = {styles.image} source={{uri : data.image}} resizeMode='contain'/>
-      <Text style = {styles.title}>{data.name}</Text>
+      <Text style = {styles.title}>
+        {
+            data?.name.length > 25 ? (data?.name).slice(0, 25) + "..." : data?.name
+        }
+      </Text>
       <Text style = {styles.priceNew}>{USD.format(data.price)}</Text>
       <View style = {styles.groupView}>
         <Text style = {styles.priceOld}>$534,22</Text>

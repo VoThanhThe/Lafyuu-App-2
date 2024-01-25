@@ -4,6 +4,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import { AppContext } from '../ultil/AppContext';
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,29 +23,18 @@ const Account = (props) => {
     const onLogout = () => {
         setisLogin(false);
         dispatch(logoutUser());
+        handleLogout()
     }
 
-    const showConfirmDialog = () => {
-        return Alert.alert(
-            "Are your sure?",
-            "Are you sure you want to Log out this application?",
-            [
-                // The "Yes" button
-                {
-                    text: "Yes",
-                    onPress: () => (
-                        // setShowBox(false)
-                        onLogout()
-                    )
-                },
-                // The "No" button
-                // Does nothing but dismiss the dialog when tapped
-                {
-                    text: "No",
-                },
-            ]
-        );
-    }
+    const handleLogout = async () => {
+        try {
+          await GoogleSignin.revokeAccess();
+          await GoogleSignin.signOut();
+          // Thực hiện các bước khác sau khi đăng xuất
+        } catch (error) {
+          console.error('Error during logout:', error);
+        }
+      };
     return (
         <View style={styles.container}>
             {/* Start Header */}

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "536256392189",
+    "project_id": "app-shoes-6fd12",
+    "storage_bucket": "app-shoes-6fd12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:536256392189:android:8903ba48a9542f6e4b0794",
+        "android_client_info": {
+          "package_name": "com.lafyuu_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "536256392189-92ghr4nhfuh1u2horklnrsrnb60p390r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6sT6_Qi6Pbv5l7q7g1yex4iB8atlrUxk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "536256392189-92ghr4nhfuh1u2horklnrsrnb60p390r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

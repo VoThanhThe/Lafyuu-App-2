@@ -14,7 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 
 const ItemFavoriteProduct = (props) => {
-    const { data, index } = props;
+    const { data } = props;
     const navigation = useNavigation();
     const dispatch = useDispatch();
     const [showBox, setShowBox] = useState(true);
@@ -48,7 +48,8 @@ const ItemFavoriteProduct = (props) => {
     }
 
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container}
+            >
             <Image style={styles.image} resizeMode='contain' source={{ uri: data.product_id.image }} />
             <Text style={styles.title}>{data.product_id.name}</Text>
             <View style={styles.groupView}>
@@ -67,7 +68,7 @@ const ItemFavoriteProduct = (props) => {
                     <Text style={styles.priceOld}>$534,22</Text>
                     <Text style={styles.sale}>24% Off</Text>
                 </View>
-                <TouchableOpacity onPress={toggleModal} style = {{ padding: 5}}>
+                <TouchableOpacity onPress={toggleModal} style={{ padding: 5 }}>
                     <FontAwesome style={styles.icon} name="trash-o" color="#9098B1" size={20} />
                 </TouchableOpacity>
             </View>
@@ -91,7 +92,7 @@ const ItemFavoriteProduct = (props) => {
                                 <Text style={{ fontSize: 18, fontWeight: "700", color: "#9098B1", lineHeight: 57, textAlign: "center", }}>Cancel</Text>
                             </TouchableOpacity>
                         </View>
-                    </View> 
+                    </View>
                 </View>
             </Modal>
         </TouchableOpacity>

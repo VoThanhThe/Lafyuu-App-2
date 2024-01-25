@@ -19,7 +19,7 @@ const ItemProduct = (props) => {
             <TouchableOpacity
                 onPress={() => navigation.navigate("ProductDetail", {data})}>
                 <Image style={styles.image} source={{ uri: data.image }}  resizeMode='contain'/>
-                <Text style={styles.title}>{data.name}</Text>
+                <Text style={styles.title}>{data?.name.length > 40 ? (data?.name).slice(0, 40) + "..." : data?.name}</Text>
                 <View style={styles.groupView}>
                     <Icon style={styles.icon} name="star" color="#FFC833" size={12} />
                     <Icon style={styles.icon} name="star" color="#FFC833" size={12} />

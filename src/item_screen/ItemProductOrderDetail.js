@@ -21,7 +21,12 @@ const ItemProductOrderDetail = (props) => {
         <View style={styles.group_card}>
             <Image style={styles.image} source={{uri: data.product_id.image}} />
             <View style={styles.group_right}>
-                <Text style={styles.textName}>{data.product_id.name}</Text>
+                {/* <Text style={styles.textName}>{data?.product_id.name}</Text> */}
+                <Text style={styles.textName}>
+                    {
+                        data?.product_id.name.length > 40 ? (data?.product_id.name).slice(0, 40) + "..." : data?.product_id.name
+                    }
+                </Text>
                 <Text style={[styles.textName,{color: '#223263', fontWeight: "400", opacity: 0.5}]}>Quantity: {data.quantity}</Text>
                 <Text style={styles.textPrice}>Price: {USD.format(data.product_id.price)}</Text>
             </View>

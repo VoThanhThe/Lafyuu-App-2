@@ -2,18 +2,67 @@ import { StyleSheet, Text, View, Alert, TextInput, FlatList, TouchableOpacity, S
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon1 from 'react-native-vector-icons/Feather'
-import Icon2 from 'react-native-vector-icons/Ionicons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { SelectList } from 'react-native-dropdown-select-list'
 import ItemGengerExplore from '../item_screen/ItemGengerExplore'
 import AxiosIntance from '../ultil/AxiosIntance';
 import LoadingScreen from './LoadingScreen';
 import ItemSearch from '../item_screen/ItemSearch'
+import Voice from '@react-native-voice/voice';
 
 const Search = (props) => {
     const { navigation, route } = props;
     const [dataProduct, setDataProduct] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [inputValue, setInputValue] = useState("");
+    const [isRecording, setIsRecording] = useState(false);
+    const [result, setResult] = useState("");
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        Voice.onSpeechResults = onSpeechResults;
+        Voice.onSpeechEnd = onSpeechEnd;
+    
+        return () => {
+          Voice.destroy().then(Voice.removeAllListeners);
+        };
+      }, []);
+    
+      const startRecording = async () => {
+        try {
+          setIsRecording(true);
+          await Voice.start('en-US');
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    
+      const stopRecording = async () => {
+        try {
+          setIsRecording(false);
+          await Voice.stop();
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    
+      const handleToggleRecording = () => {
+        if (isRecording) {
+          stopRecording();
+        } else {
+          startRecording();
+        }
+      };
+    
+      const onSpeechResults = (e) => {
+        // Xử lý kết quả nhận dạng giọng nói ở đây
+        setInputValue(e.value[0]);
+      };
+    
+      const onSpeechEnd = () => {
+        // Bắt sự kiện khi ghi âm hoàn thành
+        setIsRecording(false); // Tắt trạng thái ghi âm sau khi hoàn thành
+      };
 
     const handleInputChange = (text) => {
         setInputValue(text);
@@ -29,7 +78,7 @@ const Search = (props) => {
     useEffect(() => {
         if (inputValue.length > 0) {
             countDownSearch();
-        } else if( inputValue.length == 0) {
+        } else if (inputValue.length == 0) {
             setDataProduct([]);
         }
         return () => {
@@ -38,7 +87,7 @@ const Search = (props) => {
 
     const search = async () => {
         //http://localhost:3000/api/product/search/name?keyword=nike
-        const response = await AxiosIntance().get("/api/product/search/name?keyword=" + inputValue +"&sort=" + 1);
+        const response = await AxiosIntance().get("/api/product/search/name?keyword=" + inputValue + "&sort=" + 1);
         if (response.returnData.error == false) {
             setDataProduct(response.products);
             setIsLoading(false);
@@ -47,7 +96,7 @@ const Search = (props) => {
         }
     }
     const onSearch = async () => {
-        navigation.navigate("SearchResult", { search: inputValue});
+        navigation.navigate("SearchResult", { search: inputValue });
     }
 
     let timeOut = null;
@@ -68,7 +117,7 @@ const Search = (props) => {
             {/* Start Header */}
             <View style={styles.groupHeader}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon2 name="chevron-back" color="#9098B1" size={20} />
+                    <Ionicons name="chevron-back" color="#9098B1" size={20} />
                 </TouchableOpacity>
                 <View style={styles.inputHeader}>
                     <TextInput
@@ -84,19 +133,26 @@ const Search = (props) => {
                         inputValue.length == 0 ?
                             (
                                 <TouchableOpacity style={{ position: 'absolute', top: 13, right: 18, display: 'none' }}>
-                                    <Icon2 name="close" color="#9098B1" size={20} />
+                                    <Ionicons name="close" color="#9098B1" size={20} />
                                 </TouchableOpacity>
                             ) :
                             (
                                 <TouchableOpacity onPress={handleClearInput} style={{ position: 'absolute', top: 13, right: 18, display: 'flex' }}>
-                                    <Icon2 name="close" color="#9098B1" size={20} />
+                                    <Ionicons name="close" color="#9098B1" size={20} />
                                 </TouchableOpacity>
                             )
                     }
                 </View>
-                <TouchableOpacity>
-                    <Icon2 name="mic-outline" color="#9098B1" size={24} />
+                <TouchableOpacity onPress={handleToggleRecording}>
+                    {isRecording ? (
+                        <Ionicons name="mic" color="red" size={24} />
+                    ) : (
+                        <Ionicons name="mic-outline" color="#9098B1" size={24} />
+                    )}
                 </TouchableOpacity>
+                {/* <TouchableOpacity onPress={isRecording ? stopRecodeing : startRecodeing}>
+                <Ionicons name="mic-outline" color={isRecording ? 'red' : "#9098B1"} size={50} />
+            </TouchableOpacity> */}
             </View>
             {/* End Header */}
             <View style={{ paddingHorizontal: 16 }}>

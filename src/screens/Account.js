@@ -32,7 +32,7 @@ const Account = (props) => {
           await GoogleSignin.signOut();
           // Thực hiện các bước khác sau khi đăng xuất
         } catch (error) {
-          console.error('Error during logout:', error);
+          console.log('Error during logout:', error);
         }
       };
     return (

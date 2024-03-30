@@ -56,18 +56,30 @@ const Offer = (props) => {
 
             </View>
             {/* End Header */}
-            <ScrollView showsVerticalScrollIndicator={false}>
+            {
+                isLoading ? (<LoadingScreen />) :
+                    (
+                        <ScrollView showsVerticalScrollIndicator={true}>
+                            <View style={{ padding: 16 }}>
+                                <Image style={styles.image} source={require('../assets/img_bannel.png')} />
+                                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                                    <FlatList
+                                        style={{ marginVertical: 12 }}
+                                        numColumns={2}
+                                        data={dataProduct}
+                                        scrollEnabled={false}
+                                        renderItem={({ item }) => <ItemProduct data={item} navigation={navigation} />}
+                                        keyExtractor={item => item._id}
+                                        showsHorizontalScrollIndicator={false}
+                                    />
 
-                <View style={{ padding: 16, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-                    {/* Bannel */}
-                    <Image style={styles.image} source={require('../assets/img_bannel.png')} />
+                                </View>
+                            </View>
 
-                    {/* Bannel 1 */}
-                    {
-                        dataProduct.map((item) => <ItemProduct key={item._id} data={item} navigation={navigation} />)
-                    }
-                </View>
-            </ScrollView>
+                        </ScrollView>
+                    )
+            }
+
         </View>
 
     )

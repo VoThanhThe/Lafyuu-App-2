@@ -1,11 +1,45 @@
 import { StyleSheet, Text, View, ScrollView, TextInput, Image, FlatList, Button, Pressable, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import AxiosIntance from '../ultil/AxiosIntance'
+import { useSelector } from 'react-redux'
+import LoadingScreen from './LoadingScreen'
+import ItemNotificationActivity from '../item_screen/ItemNotificationActivity'
 
 const Notification_Activity = (props) => {
     const { navigation } = props;
+    const [dataNotification, setDataNotification] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const user = useSelector(state => state.UserReducer.user);
+    const [refreshing, setRefreshing] = useState(false);
+
+    const getNotification = async () => {
+        try {
+            const response = await AxiosIntance().get('/api/notification?user_id=' + user._id);
+            console.log("Order: ", response)
+            if (response.returnData.error === false) {
+                setDataNotification(response.notification);
+            }
+            setIsLoading(false);
+        } catch (error) {
+            console.error("Error fetching data notification :", error);
+        }
+
+    }
+    useEffect(() => {
+        getNotification()
+        return () => {
+        }
+    }, [])
+
+    const handleRefresh = () => {
+        setRefreshing(true);
+        getNotification()
+        setRefreshing(false);
+    };
+
     return (
         <View style={styles.container}>
             {/* Start Header */}
@@ -20,44 +54,19 @@ const Notification_Activity = (props) => {
             </View>
             {/* End Header */}
 
-            {/* Item 1 */}
-            <TouchableOpacity>
-                <View style={styles.groupItem}>
-                    <Ionicons name="md-swap-vertical" color="#40BFFF" size={18} />
-                    <View style={styles.groupTextRight}>
-                        <Text style={styles.textTitle}>Transaction Nike Air Zoom Product</Text>
-                        <Text style={styles.textContent}>Culpa cillum consectetur labore nulla nulla magna irure. Id veniam culpa officia aute dolor amet deserunt ex proident commodo</Text>
-                        <Text style={styles.textDate}>April 30, 2014 1:01 PM</Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
-            {/* Item 1 */}
-
-            {/* Item 2 */}
-            <TouchableOpacity>
-                <View style={styles.groupItem}>
-                    <Ionicons name="md-swap-vertical" color="#40BFFF" size={18} />
-                    <View style={styles.groupTextRight}>
-                        <Text style={styles.textTitle}>Transaction Nike Air Zoom Pegasus 36 Miami</Text>
-                        <Text style={styles.textContent}>Culpa cillum consectetur labore nulla nulla magna irure. Id veniam culpa officia aute dolor</Text>
-                        <Text style={styles.textDate}>April 30, 2014 1:01 PM</Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
-            {/* Item 2 */}
-
-            {/* Item 3 */}
-            <TouchableOpacity>
-                <View style={styles.groupItem}>
-                    <Ionicons name="md-swap-vertical" color="#40BFFF" size={18} />
-                    <View style={styles.groupTextRight}>
-                        <Text style={styles.textTitle}>Transaction Nike Air Max</Text>
-                        <Text style={styles.textContent}>Culpa cillum consectetur labore nulla nulla magna irure. Id veniam culpa officia aute dolor amet deserunt ex proident commodo</Text>
-                        <Text style={styles.textDate}>April 30, 2014 1:01 PM</Text>
-                    </View>
-                </View>
-            </TouchableOpacity>
-            {/* Item 3 */}
+            {
+                isLoading ? (<LoadingScreen />) :
+                    (
+                        <FlatList
+                            style={{ marginVertical: 12 }}
+                            data={dataNotification}
+                            renderItem={({ item }) => <ItemNotificationActivity data={item} navigation={navigation} />}
+                            keyExtractor={item => item._id}
+                            showsHorizontalScrollIndicator={false}
+                            onRefresh={handleRefresh}
+                            refreshing={refreshing} />
+                    )
+            }
 
         </View >
     )

@@ -18,12 +18,15 @@ import ItemProduct from '../item_screen/ItemProduct';
 import { AppContext } from '../ultil/AppContext';
 import AxiosIntance from '../ultil/AxiosIntance';
 import LoadingScreen from './LoadingScreen';
+import { useSelector } from 'react-redux'
 
 const Home = (props) => {
   const { navigation } = props;
   const [dataProduct, setDataProduct] = useState([]);
   const [dataCategory, setDataCategory] = useState([]);
+  const [dataNotification, setDataNotification] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const user = useSelector(state => state.UserReducer.user);
 
   // Giới hạn số phần tử hiển thị
   const limit = 10;
@@ -32,9 +35,10 @@ const Home = (props) => {
 
   const fetchData = async () => {
     try {
-      const [productsResponse, categoriesResponse] = await Promise.all([
+      const [productsResponse, categoriesResponse, notificationsResponse] = await Promise.all([
         AxiosIntance().get(`/api/product`),
         AxiosIntance().get("/api/categories/get-all-categories"),
+        AxiosIntance().get('/api/notification?user_id=' + user._id),
       ]);
 
       console.log("Products Response:", productsResponse);
@@ -50,6 +54,12 @@ const Home = (props) => {
       } else {
         console.log("Lấy dữ liệu danh mục thất bại");
       }
+
+      if (notificationsResponse.returnData.error === false) {
+        setDataNotification(notificationsResponse.notification);
+      } else {
+        console.log("Lấy dữ liệu thông báo thất bại");
+      }
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -63,7 +73,7 @@ const Home = (props) => {
     return () => {
       // Cleanup logic if needed
     };
-  }, []);
+  }, [setDataNotification]);
 
 
   return (
@@ -116,6 +126,13 @@ const Home = (props) => {
                   color="#9098B1"
                   size={20}
                 />
+                <View style = {{backgroundColor: "red", 
+                width: 10, height: 10, 
+                borderRadius: 100, 
+                position: 'absolute',
+                top: 0,right: 0,
+                opacity: 1
+                }}></View>
               </TouchableOpacity>
             </View>
             {/* End Header */}

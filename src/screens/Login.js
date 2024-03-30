@@ -65,6 +65,9 @@ const Login = (props) => {
           dispatch(loginUser(response.user));
           console.log(response.token);
           await AsyncStorage.setItem("token", response.token);
+          // Trong action creator sau khi đăng nhập thành công
+          await AsyncStorage.setItem('userInfo', JSON.stringify(response.user)); // Lưu thông tin người dùng vào AsyncStorage
+
           ToastAndroid.show('Login Successfully!', ToastAndroid.SHORT);
           setisLogin(true);
           setErrResult(false);
